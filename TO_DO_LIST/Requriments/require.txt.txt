@@ -1,0 +1,46 @@
+Your Flask application code looks good, but there are a couple of improvements and corrections that can be made:
+
+1. **Form Field Name:**
+   In your HTML form, ensure that the name attribute of the input field matches what you're trying to access in Flask. Modify your input field to have `name="todo_name"`:
+   ```html
+   <input type="text" placeholder="Enter Todo" id="input-todo" name="todo_name">
+   ```
+
+2. **Form Submission Method:**
+   When handling form submissions in Flask, it's a good practice to use `request.form.get("key")` instead of directly accessing `request.form["key"]`. This prevents KeyError if the key is not present in the form data. Update your code to use `request.form.get("todo_name")`:
+   ```python
+   todo_name = request.form.get("todo_name")
+   ```
+
+3. **Redirect Logic in Delete Function:**
+   In your delete_todo function, the return statement for redirecting after deleting a todo should be outside the loop. Currently, it's inside the loop, which can cause unexpected behavior. Here's the corrected version:
+   ```python
+   @app.route("/delete/<int:todo_id>", methods=["POST"])
+   def delete_todo(todo_id):
+       global todos
+       for todo in todos:
+           if todo['id'] == todo_id:
+               todos.remove(todo)
+               break  # Exit the loop after removing the todo
+       return redirect(url_for("home"))  # Redirect outside the loop
+   ```
+
+4. **Proper ID Generation:**
+   When generating new IDs for todos, ensure that the IDs are unique. You can use a more robust method to generate unique IDs, such as using a UUID library or checking existing IDs before generating a new one.
+
+With these adjustments, your Flask application should work smoothly for adding, checking, and deleting todos. Remember to restart your Flask server after making these changes.
+
+
+Certainly! Here is the content for your `requirements.txt` file based on the codes you provided:
+
+```plaintext
+Flask==2.0.2
+```
+
+You can create a `requirements.txt` file in your project directory and paste the above content into it. This file specifies the Python packages required for your Flask application to run. You can then use this file with tools like pip to install the dependencies for your project:
+
+```bash
+pip install -r requirements.txt
+```
+
+This command will install Flask version 2.0.2 and any other dependencies specified in the `requirements.txt` file.
